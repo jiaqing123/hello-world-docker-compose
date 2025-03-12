@@ -1,6 +1,10 @@
 # 使用官方 Python 镜像
 FROM python:3.9-slim
 
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y git
+
 # 设置工作目录
 WORKDIR /app
 
