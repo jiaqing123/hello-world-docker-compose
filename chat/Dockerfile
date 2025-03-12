@@ -1,6 +1,7 @@
 # 使用官方 Python 镜像
 FROM python:3.9-slim
 
+# 本地开发使用
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y git

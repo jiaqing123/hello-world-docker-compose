@@ -1,25 +1,47 @@
 from flask import Flask, request, jsonify, render_template
 import requests
 
+from openai import OpenAI
+
 app = Flask(__name__)
 
 # DeepSeek API的URL和API密钥
-DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat"
-DEEPSEEK_API_KEY = "sk-f3a0e394f8f5489cab316e2ed8667519"
+DEEPSEEK_API_URL = "https://api.deepseek.com/chat/completions"
+DEEPSEEK_API_KEY = ""
 
 def get_deepseek_response(user_input):
-    headers = {
-        "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
-        "Content-Type": "application/json"
-    }
-    data = {
-        "message": user_input
-    }
-    response = requests.post(DEEPSEEK_API_URL, headers=headers, json=data)
-    if response.status_code == 200:
-        return response.json().get("reply", "Sorry, I couldn't process that.")
-    else:
-        return "Sorry, there was an error connecting to DeepSeek."
+    # headers = {
+    #     "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
+    #     "Content-Type": "application/json"
+    # }
+    # data = {
+    #     "message": {
+    #         "model": "deepseek-chat",
+    #         "messages": [
+    #             {"role": "system", "content": "You are a helpful assistant."},
+    #             {"role": "user", "content": user_input}
+    #         ],
+    #         "stream": False
+    #     }
+    # }
+    # response = requests.post(DEEPSEEK_API_URL, headers=headers, json=data)
+    # if response.status_code == 200:
+    #     return response.json().get("reply", "Sorry, I couldn't process that.")
+    # else:
+    #     return response.text
+    
+    client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
+    response = client.chat.completions.create(
+        model="deepseek-chat",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant"},
+            {"role": "user", "content": user_input},
+        ],
+        stream=False
+    )
+    return response.choices[0].message.content
+    
+
 
 @app.route("/")
 def home():
