@@ -1,13 +1,13 @@
 from flask import Flask, request, jsonify, render_template
-import requests
-
 from openai import OpenAI
+from fileio import read_key_file
+import requests
 
 app = Flask(__name__)
 
 # DeepSeek API的URL和API密钥
 DEEPSEEK_API_URL = "https://api.deepseek.com/chat/completions"
-DEEPSEEK_API_KEY = ""
+DEEPSEEK_API_KEY = read_key_file("chat/deepseek-api.key")
 
 def get_deepseek_response(user_input):
     # headers = {
